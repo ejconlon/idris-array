@@ -1,6 +1,6 @@
 package array
 
-modules = Data.Array
+modules = Data.Array, Data.Rel
 pkgs = prelude
 
 makefile = Makefile

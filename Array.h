@@ -7,3 +7,4 @@ VAL idris_indexArray(int ix, VAL arr);
 
 void idris_setAtArray(int ix, VAL elem, VAL arr);
 
+void idris_fillArray(int len, VAL elem, VAL arr);
