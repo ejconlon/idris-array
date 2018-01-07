@@ -1,7 +1,0 @@
-package array
-
-modules = Data.Array, Data.Rel
-pkgs = prelude
-
-makefile = Makefile
-objs = Array.h, Array.o
