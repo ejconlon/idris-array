@@ -30,9 +30,11 @@ prim_setAtArray {a} ix elem arr =
 %access export
 
 namespace IxArray
+  public export
   CanResize : Int -> Int -> Type
   CanResize = Predicate (<=)
 
+  public export
   CanIndex : Int -> Int -> Type
   CanIndex = Predicate (\ix, len => ix >= 0 && ix < len)
 
@@ -58,9 +60,9 @@ namespace IxArray
   setAt ix elem (MkIxArray len parr) = prim_setAtArray ix elem parr
 
   replicate : (len: Int) -> a -> IO (IxArray len a)
-  replicate len elem = do
+  replicate len fillElem = do
     parr <- prim_makeArray len
-    for_ {b = ()} [0 .. len - 1] $ \ix => prim_setAtArray ix elem parr
+    for_ {b = ()} [0 .. len - 1] $ \ix => prim_setAtArray ix fillElem parr
     pure $ MkIxArray len parr
 
   imap : (a -> a) -> IxArray len a -> IO ()
@@ -77,8 +79,21 @@ namespace IxArray
       newElem <- f elem
       prim_setAtArray ix newElem parr
 
-  resize : (newLen : Int) -> IxArray len a -> {auto canResize : CanResize len newLen} -> IO (IxArray newLen a)
-  resize newLen arr = ?help
+  resize : (newLen : Int) -> a -> IxArray len a -> {auto canResize : CanResize len newLen} -> IO (IxArray newLen a)
+  resize newLen fillElem (MkIxArray len parr) = do
+    newParr <- prim_makeArray newLen
+    for_ {b = ()} [0 .. len - 1] $ \ix => do
+      -- We have to set `a` here because idris is not inferring that newParr
+      -- is an array of `a` like parr.
+      elem <- prim_indexArray {a = a} ix parr
+      prim_setAtArray ix elem newParr
+    for_ {b = ()} [len .. newLen - 1] $ \ix => prim_setAtArray ix fillElem newParr
+    pure $ MkIxArray newLen newParr
 
-  -- copy : IxArray len a -> IO (IxArray len a)
-  -- copy arr@(MkIxArray len _) = resize len arr
+  clone : IxArray len a -> IO (IxArray len a)
+  clone (MkIxArray len parr) = do
+    newParr <- prim_makeArray len
+    for_ {b = ()} [0 .. len - 1] $ \ix => do
+      elem <- prim_indexArray {a = a} ix parr
+      prim_setAtArray ix elem newParr
+    pure $ MkIxArray len newParr

@@ -3,13 +3,25 @@ module Test.IxArray
 import Data.IxArray
 import Data.IxRel
 
-testSomething : IO ()
-testSomething = putStrLn "ok"
+assertEq : Eq a => a -> a -> String -> IO ()
+assertEq actual expected msg =
+  if actual == expected
+    then pure ()
+    else do
+      putStrLn ("Failed: " ++ msg)
+      ?crash
+
+testSimple : IO ()
+testSimple = do
+  arr <- replicate 1 "a"
+  elem <- index 0 arr
+  assertEq elem "a" "read what we write"
 
 export
 testAll : IO ()
 testAll = do
-  testSomething
+  testSimple
+  putStrLn "Succeeded"
 
 -- something : (Ord a, Num a) => (m : a) -> (n : a) -> {auto smaller : OrdLTE m n} -> a
 -- something m n = m + n
