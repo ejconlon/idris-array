@@ -8,8 +8,7 @@ assertEq actual expected msg =
   if actual == expected
     then pure ()
     else do
-      putStrLn ("Failed: " ++ msg)
-      ?crash
+      idris_crash ("Failed: " ++ msg ++ "\n")
 
 testSimple : IO ()
 testSimple = do

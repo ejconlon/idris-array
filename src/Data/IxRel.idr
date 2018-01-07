@@ -1,6 +1,7 @@
 module Data.IxRel
 
 %access public export
+%default total
 
 ||| Indexed binary relations
 data IxRel : (a -> b -> c) -> c -> a -> b -> Type where
