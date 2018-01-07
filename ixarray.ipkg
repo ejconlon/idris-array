@@ -1,5 +1,7 @@
 package ixarray
 
+sourcedir = src
+
 modules = Data.IxArray
         , Data.IxRel
         , Test.IxArray
