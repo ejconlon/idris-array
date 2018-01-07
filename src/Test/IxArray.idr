@@ -1,7 +1,7 @@
 module Test.IxArray
 
 import Data.IxArray
-import Data.Rel
+import Data.IxRel
 
 testSomething : IO ()
 testSomething = putStrLn "ok"
