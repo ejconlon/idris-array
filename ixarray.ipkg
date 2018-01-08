@@ -8,9 +8,4 @@ modules = Data.IxArray
 
 tests = Test.IxArray.testAll
 
-pkgs = prelude
-
-makefile = Makefile
-
-objs = Array.h
-     , Array.o
+pkgs = prelude, contrib
